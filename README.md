@@ -86,3 +86,65 @@ ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationC
 Book book = context.getBean(Book.class);
 System.out.println("The book's title is " + book.getTitle());
 ```
+
+## Add tests
+
+### Add dependency for Spring TestContext Framework
+
+```xml
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-test</artifactId>
+    <version>6.1.10</version>
+    <scope>test</scope>
+</dependency>
+```
+
+### Add dependency for JUnit
+
+```xml
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-engine</artifactId>
+    <version>5.11.0-M2</version>
+    <scope>test</scope>
+</dependency>
+```
+
+### Create test to check that application context is created
+
+```java
+public class ApplicationTests {
+
+    @Test
+    @DisplayName("Checks that Application Context is created")
+    public void checkApplicationContextCreated() {
+        ApplicationContext context = new AnnotationConfigApplicationContext();
+
+        assertNotNull(context);
+    }
+}
+```
+
+### Create test to check that book title was changed after bean creation
+
+- use `@ExtendWith(SpringExtension.class)` to integrate Spring TestContext Framework to the test
+- use `@ContextConfiguration` to configure Spring context in Spring integration tests
+
+```java
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { ApplicationConfiguration.class })
+public class BookTests {
+
+    @Autowired
+    private ApplicationContext context;
+
+    @Test
+    @DisplayName("Check that the book title was changed")
+    public void checkBookTitleChanged() {
+        Book book = context.getBean("book", Book.class);
+
+        assertEquals("Changed title", book.getTitle());
+    }
+}
+```
