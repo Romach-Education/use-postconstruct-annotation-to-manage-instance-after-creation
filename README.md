@@ -137,14 +137,16 @@ public class ApplicationTests {
 public class BookTests {
 
     @Autowired
-    private ApplicationContext context;
+    private Book book;
 
     @Test
     @DisplayName("Check that the book title was changed")
     public void checkBookTitleChanged() {
-        Book book = context.getBean("book", Book.class);
+        String actualTitle = book.getTitle();
 
-        assertEquals("Changed title", book.getTitle());
+        String expectedTitle = "Changed title";
+
+        assertEquals(expectedTitle, actualTitle);
     }
 }
 ```
